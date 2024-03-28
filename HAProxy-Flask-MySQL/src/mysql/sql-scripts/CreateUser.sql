@@ -1,0 +1,3 @@
+CREATE USER 'cloud'@'%' IDENTIFIED BY 'Cloud_123';
+GRANT ALL PRIVILEGES ON cloudstones.* TO 'cloud'@'%';
+FLUSH PRIVILEGES;
