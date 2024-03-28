@@ -1,0 +1,64 @@
+---
+    - name: Make sure that we can connect to the machine
+      ping:
+    
+    - name: install openjdk
+      yum: name=java-1.8.0-openjdk-devel  state=present
+
+    - name: ansible create directory example
+      file:  path=/home/centos/tomcat  owner=centos group=centos state=directory mode=0777 recurse=yes
+      
+    - name: Download foo.conf
+      get_url:
+        url: https://downloads.apache.org/tomcat/tomcat-8/v8.5.57/bin/apache-tomcat-8.5.57.tar.gz
+        dest: /home/centos/tomcat
+   
+   
+    - name: Extract Tomcat archive
+      unarchive: src=/home/centos/tomcat/apache-tomcat-8.5.57.tar.gz dest=/home/centos/tomcat remote_src=yes
+
+    - name: change ownership 
+      file: path=/home/centos/tomcat/apache-tomcat-8.5.57 state=directory recurse=yes owner=centos group=centos mode=0755
+ 
+
+    - name: cloning git repo
+      git: repo=https://github.com/krishnamaram2/binary-code.git
+           dest=/home/centos/binary-code
+
+    - name: Stop Tomcat
+      command: nohup /home/centos/tomcat/apache-tomcat-8.5.57/bin/shutdown.sh
+      become: true
+      become_user: root
+
+    - name: deploy war file in webapps diretcory
+      copy:  src=/home/centos/binary-code/binaries/Student.war dest=/opt/tomcat/apache-tomcat-8.5.57/webapps/
+
+    - name: Start Tomcat
+      command: nohup /home/centos/tomcat/apache-tomcat-8.5.57/bin/startup.sh
+      become: true
+      become_user: root
+   
+    - name: change ownership 
+      file: path=/home/centos/tomcat/apache-tomcat-8.5.57/webapps/ state=directory recurse=yes owner=centos group=centos mode=0666
+    - name: commenting a line in server.xml
+      replace:
+           path: /home/centos/tomcat/apache-tomcat-8.5.57/conf/server.xml
+           regexp: '<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />'
+           replace: '<!-- <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />-->'
+
+
+    - name: changge localhost in application.properties file
+      replace:
+          path: /home/centos/tomcat/apache-tomcat-8.5.57/webapps/Student/WEB-INF/classes/application.properties
+          regexp: 'localhost'
+          replace: '3.223.3.165'
+
+
+    - name: Start Tomcat
+      command: nohup /home/centos/tomcat/apache-tomcat-8.5.57/bin/startup.sh
+      become: true
+      become_user: root

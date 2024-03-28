@@ -1,0 +1,27 @@
+---
+# tasks file for webserver
+  - name: install http server
+    yum: name=httpd state=latest
+
+  - name: restart http server
+    service:
+        name: httpd
+        state: started
+
+  - name: cloning git repo
+    git: repo=https://github.com/krishnamaram2/binary-code.git
+            dest=/home/centos/binary-code
+
+
+  - name: deploy dist folder
+    copy:  src=/home/centos/binary-code/binaries/dist dest=/var/www/html/
+
+  - name: change ownership 
+    file: path=/var/www/html/dist/ state=directory recurse=yes owner=centos group=centos mode=0755
+ 
+  - name: change localhost to ip in /var/ww/html/dist/main.js file
+    replace:
+       path: /var/www/html/dist/main.js
+       regexp: 'localhost'
+       replace: '34.231.57.92'
+

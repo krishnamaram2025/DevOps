@@ -1,0 +1,17 @@
+[webserver]
+localhost
+
+[appserver]
+localhost
+
+[dbserver]
+localhost
+
+[buildserver]
+localhost
+
+[artifactsserver]
+localhost
+
+[database]
+localhost

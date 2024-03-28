@@ -1,0 +1,20 @@
+---
+- name: This playbook is for Artifactory installation and set up
+  hosts: binaryreposerver
+  become: true
+  gather_facts: false
+  tasks:
+  - name: install openjdk
+    yum: name=java-1.8.0-openjdk-devel state=present
+  
+  - name: download artifactory  repo
+    get_url: 
+       url: https://bintray.com/jfrog/artifactory-rpms/download_file?file_path=jfrog-artifactory-oss%2Fjfrog-artifactory-oss-7.4.1.rpm
+       dest: ./jfrog-artifactory-oss-7.4.1.rpm
+
+  - name: install rpm package
+    yum: name=./jfrog-artifactory-oss-7.4.1.rpm state=present  
+
+  - name: start artifactory service and enable on boot
+    service: name=artifactory state=started enabled=yes
+

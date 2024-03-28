@@ -1,0 +1,24 @@
+---  
+  - name: create database
+    mysql_db: login_host=mydb-1c.cdftiosbmcfa.us-east-1.rds.amazonaws.com login_user=admin login_password="{{mysql_root_password}}" name=indigo state=present
+
+  - name: create mysql user
+    mysql_user:
+           login_host: mydb-1c.cdftiosbmcfa.us-east-1.rds.amazonaws.com
+           login_port: 3306
+           login_user: admin
+           login_password: "{{mysql_root_password}}"
+           name: krishna
+           password: Krishna_123
+           update_password: on_create
+           priv: '*.*:ALL'
+           state: present
+  - name: install git
+    yum: name=git state=present
+  - name: clone WebApp repo
+    git: repo=https://github.com/krishnamaram2/WebApp.git dest=/root/WebApp
+  - name: import indigo.sql
+    shell: mysql -h mydb-1c.cdftiosbmcfa.us-east-1.rds.amazonaws.com -u admin -pAdmin_123 indigo < /root/WebApp/binary/indigo.sql
+
+
+

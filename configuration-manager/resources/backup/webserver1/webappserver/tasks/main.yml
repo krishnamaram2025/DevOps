@@ -1,0 +1,89 @@
+---
+    - name: Make sure that we can connect to the machine
+      ping:
+    - name: install git
+      yum: name=git state=present
+    
+    - name: install openjdk
+      yum: name=java-1.8.0-openjdk-devel  state=present
+
+    - name: add group "tomcat"
+      group: name=tomcat
+
+    - name: add user "tomcat"
+      user: name=tomcat group=tomcat createhome=no
+      become: true
+
+    - name: ansible create directory example
+      file:  path=/opt/tomcat  owner=tomcat group=tomcat state=directory mode=0777 recurse=yes
+      
+    - name: Download foo.conf
+      get_url:
+        url: https://downloads.apache.org/tomcat/tomcat-8/v8.5.54/bin/apache-tomcat-8.5.54.tar.gz
+        dest: /opt/tomcat
+    - name: Extract Tomcat archive
+      unarchive: src=/opt/tomcat/apache-tomcat-8.5.54.tar.gz dest=/opt/tomcat
+
+    - name: Start Tomcat
+      command: nohup /opt/tomcat/apache-tomcat-8.5.54/bin/startup.sh
+      become: true
+      become_user: root
+
+    - name: cloning git repo
+      git: repo=https://github.com/krishnamaram2/WebApp.git
+           dest=/root/WebApp
+
+
+    - name: deploy war file in webapps diretcory
+      copy:  src=/root/WebApp/binary/Student.war dest=/opt/tomcat/apache-tomcat-8.5.54/webapps/
+
+#    - name: Start Tomcat
+ #     command: nohup /opt/tomcat/apache-tomcat-8.5.54/bin/startup.sh
+  #    become: true
+   #   become_user: root
+   
+    #- name: changge localhost in application.properties file
+     # replace:
+      #     path: /opt/tomcat/apache-tomcat-8.5.54/webapps/Student/WEB-INF/classes/application.properties
+       #    regexp: 'localhost'
+        #   replace: '54.211.196.236'
+
+
+    - name: commenting a line in server.xml
+      replace:
+           path: /opt/tomcat/apache-tomcat-8.5.54/conf/server.xml
+           regexp: '<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />'
+           replace: '<!-- <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />-->'
+
+
+    - name: Start Tomcat
+      command: nohup /opt/tomcat/apache-tomcat-8.5.54/bin/startup.sh
+      become: true
+      become_user: root
+
+    - name: changge localhost in application.properties file
+      replace:
+           path: /opt/tomcat/apache-tomcat-8.5.54/webapps/Student/WEB-INF/classes/application.properties
+           regexp: 'localhost'
+           replace: '54.198.195.91'
+
+    - name: change localhost in application.properties file
+      replace:
+           path: /opt/tomcat/apache-tomcat-8.5.54/webapps/Student/WEB-INF/classes/application.properties
+           regexp: 'localhost'
+           replace: '54.198.195.91'
+    - name: clean up all files i n webapps/ROOT/ directory
+      shell: rm -rf /opt/tomcat/apache-tomcat-8.5.54/webapps/ROOT/*
+
+    - name: deploy dist folder
+      copy:  src=/root/WebApp/binary/dist/ dest=/opt/tomcat/apache-tomcat-8.5.54/webapps/ROOT/
+   
+    - name: change localhost to ip in /var/ww/html/dist/main.js file
+      replace:
+         path: /opt/tomcat/apache-tomcat-8.5.54/webapps/ROOT/main.js
+         regexp: 'localhost'
+         replace: '54.198.195.91'

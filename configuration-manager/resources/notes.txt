@@ -1,0 +1,39 @@
+https://unix.stackexchange.com/questions/7700/how-to-enable-remote-login
+permitrootlogin
+passwordauthentication
+
+
+
+Level2
+======
+Password based authentication
+---------------------------------
+
+sudo -i vs sudo su -l ?
+vi /ect/ssh/sshd_config
+PassowrdAuthentication yes
+
+systemctl restart sshd
+
+Keybased authentication
+
+generate keys = public + private
+ssh-keygen 
+ssh-copy-id krishna@ip 
+
+
+
+create user
+adduser/useradd krishna
+passwd krishna
+
+visudo
+krishna ALL={ALL:ALL) NOPASSWD:ALL or usermod -aG wheel krishna
+
+su krishna
+
+
+
+install ansible
+
+ansible-galaxy init <rolename>

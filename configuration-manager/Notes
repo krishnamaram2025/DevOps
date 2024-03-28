@@ -1,0 +1,29 @@
+Role Directory Structure
+  plays/
+           bootstrap.yml
+           configure_asa.yml
+    roles/
+          system_services
+          infra_services
+         scalinator
+         security
+         networking
+         common
+        cleanup
+   
+plays/bootstrap.yml
+---
+-  hosts:
+   var_files:
+   vars:
+  pre_tasks:
+   roles:
+  post_tasks:
+  
+roles/infra_services/
+      defaults
+      vars  
+      files  
+     templates
+     tasks
+     handlers 

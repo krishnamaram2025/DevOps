@@ -1,0 +1,22 @@
+---
+# tasks file for webserver
+  - name: install git
+    yum: name=git state=present
+
+  - name: install http server
+    yum: name=httpd state=latest
+  - name: restart http server
+    service:
+        name: httpd
+        state: started
+  - name: cloning git repo
+    git: repo=https://github.com/krishnamaram2/WebApp.git
+            dest=/root/WebApp
+  - name: deploy dist folder
+    copy:  src=/root/WebApp/binary/dist dest=/var/www/html/
+  - name: change localhost to ip in /var/ww/html/dist/main.js file
+    replace:
+         path: /var/www/html/dist/main.js
+         regexp: 'localhost'
+         replace: '54.198.195.91'
+

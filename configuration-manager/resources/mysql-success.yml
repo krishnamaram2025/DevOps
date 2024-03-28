@@ -1,0 +1,19 @@
+---
+- hosts: all
+  tasks:
+  - name: Create database user krishna  with all database privileges
+    mysql_user:
+      login_user: root
+      login_password: root
+      name: krishna
+      password: Krishna_123
+      priv: '*.*:ALL,GRANT'
+      state: present
+  - name: create database with  name indigo
+    mysql_db: name=indigo state=present 
+
+  - name: cloning git repo
+    git: repo=https://github.com/krishnamaram2/WebApp.git  dest=/root/WebApp
+  - name: import data into indigo
+    shell: mysql indigo < /root/WebApp/binary/indigo.sql
+

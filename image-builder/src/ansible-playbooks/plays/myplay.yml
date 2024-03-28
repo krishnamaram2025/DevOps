@@ -1,0 +1,4 @@
+- hosts: all
+  roles:
+    - role: myrole
+      become: yes

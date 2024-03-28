@@ -1,0 +1,3 @@
+---
+# vars file for krishna-mysql
+mysql_root_password : root
