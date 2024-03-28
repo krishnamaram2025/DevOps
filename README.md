@@ -1,7 +1,5 @@
 # DevOps    =  Dev  +  Ops   =   Development + Operations
- 
 This project is implemented to touch and feel the DevOps Pipeline
-
 
 # Pre-Requisites
 IAM User Access Keys
@@ -12,8 +10,6 @@ KeyPair
 
 AMI ID
 
-
-
 # Phase 0: launch ec2 instance and named as "Sandbox"
 
 Step 1: Launch EC2 instance from the AWS Console and logging into EC2 instance and install git tool
@@ -22,7 +18,7 @@ $sudo yum install git -y
 
 Step 2: clone deployer git repo
 
-$sudo git clone https://github.com/krishnamaram2/deployer.git
+$sudo git clone https://github.com/krishnamaram2025/DevOps.git
 
 Step 3: Install all the necessary packages  
 
