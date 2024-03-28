@@ -1,0 +1,22 @@
+---
+- name: create user krishna
+  user: name="krishna"
+
+- name: create boot_config directory
+  file: path=/etc/boot_config state=directory mode=0755 owner=krishna group=krishna recurse=yes
+
+- name: create boot_scripts directory
+  file: path=/etc/boot_scripts state=directory mode=0755 owner=krishna group=krishna recurse=yes
+  
+- name: create onfig directory
+  file: path=/home/centos/config state=directory mode=0755 owner=centos group=centos recurse=yes
+
+  
+- name: create scripts directory
+  file: path=/home/centos/scripts state=directory mode=0755 owner=centos group=centos recurse=yes
+
+#- name: run bash script to add shh keys
+ # script:
+ #    cmd: /home/centos/ssh-keys.sh
+
+- include: packages.yml

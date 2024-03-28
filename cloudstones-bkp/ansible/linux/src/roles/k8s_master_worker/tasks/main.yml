@@ -1,0 +1,113 @@
+---
+    - name: install git
+      yum: name=git state=present
+
+    - name: install core packages
+      yum: pkg={{ item }} state=latest update_cache=yes
+      with_items:
+          - yum-utils 
+          - device-mapper-persistent-data
+          - lvm2
+
+    - name: Add Docker repo
+      get_url:
+          url: https://download.docker.com/linux/centos/docker-ce.repo
+          dest: /etc/yum.repos.d/docer-ce.repo
+          force_basic_auth: yes
+  
+    - name: install core packages
+      yum: pkg={{ item }} state=latest update_cache=yes
+      with_items:
+          - containerd.io-1.2.13
+          - docker-ce-19.03.11
+          - docker-ce-cli-19.03.11
+
+    - name: ansible create directory example
+      file:
+          path: /etc/docker
+          state: directory
+   
+   
+    - name: ansible create directory example
+      file:
+          path: /etc/systemd/system/docker.service.d
+          state: directory
+
+    - name: just force systemd to reread configs (2.4 and above)
+      systemd:
+          daemon_reload: yes
+
+
+    
+    - name: Restart service docker, in all cases
+      service:
+          name: docker
+          state: restarted
+
+    - name: enabled service docker, in all cases
+      service:
+          name: docker
+          enabled: yes
+
+
+    - name: Copy file with owner and permissions
+      copy:
+          src: /home/centos/configuration-manager/src/opsstack/kubernetes.repo
+          dest: /etc/yum.repos.d/kubernetes.repo
+
+
+    - name: install core packages
+      yum: pkg={{ item }} state=latest update_cache=yes
+      with_items:
+          - kubeadm
+          - kubectl
+          - kubelet
+
+    - name: Restart service kubelet, in all cases
+      service:
+          name: kubelet
+          enabled: yes
+
+    - name: do echo
+      shell: echo 1 >  /proc/sys/net/bridge/bridge-nf-call-iptables
+
+    - name: initialize the cluster
+      shell: kubeadm init
+
+    - name: create .kube directory
+      file:
+         path: $HOME/.kube
+         state: directory
+         mode: '0755'
+
+    - name: copy admin.conf to user's kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: $HOME/.kube/config
+        remote_src: yes
+
+    - name: ownership for  .kube directory
+      file:
+         path: $HOME/.kube/config
+         owner: centos
+         group: centos
+         mode: '0755'
+         
+    
+    #- name: permissions for /home/centos/configuration-manager/src/opsstack/users.sh
+    #  file:
+    #    path: /home/centos/configuration-manager/src/opsstack/users.sh
+     #   owner: centos
+      #  group: centos
+        #mode: '0755'
+
+
+#    - name: run shell script for user centos
+ #     script: /home/centos/configuration-manager/src/opsstack/users.sh
+
+
+    - name: install Pod network
+      shell: kubectl apply -f  /home/centos/configuration-manager/src/opsstack/weavenet.yml
+
+    - name: untaint
+      shell: kubectl taint nodes --all node-role.kubernetes.io/master-

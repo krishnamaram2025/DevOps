@@ -1,0 +1,34 @@
+---
+    - name: Make sure that we can connect to the machine
+      ping:
+
+    - name: install epel-release package
+      yum: name=epel-release state=latest update_cache=yes
+#    - name: install cores packages
+ #     shell: "yum install python3-pip mysql mysql-devel mysql-common mysql-libs gcc python3-devel -y"
+
+    - name: install cores packages
+      shell: "yum install python3-pip -y"
+    - name: install cores packages
+      shell: "yum install mysql -y"
+    - name: install cores packages
+      shell: "yum install mysql-devel -y"
+#    - name: install cores packages
+#      shell: "sudo yum install mysql-common -y"
+    - name: install cores packages
+      shell: "yum install mysql-libs -y"
+    - name: install cores packages
+      shell: "yum install gc -y"
+    - name: install cores packages
+      shell: "yum install python3-devel -y"
+
+    - name: "install python packages with the local instance of pip"
+      shell: "pip3 install Flask mysqlclient==1.3.1 Flask-MySQLdb  gunicorn"
+
+    - name: cloning git repo
+      git: repo=https://github.com/csporg/webapp.git
+           dest=/home/centos/webapp
+    - name: cpoy gunicorn binary
+      copy: src=/usr/local/bin/gunicorn dest=/home/centos/webapp/src/flask/
+    - name: execute script
+      shell: nohup sh /home/centos/webapp/src/flask/start.sh &

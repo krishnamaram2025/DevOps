@@ -1,0 +1,12 @@
+---
+- name: install MySQL server packages and set up
+- hosts: dbserver
+  gather_facts: false
+  become: true
+  tasks:
+  - name: install git
+    yum:
+      name: 
+        -git
+        -wget
+        - unzip

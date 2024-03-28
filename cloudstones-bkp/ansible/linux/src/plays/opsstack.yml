@@ -1,0 +1,4 @@
+- hosts: localhost
+  become: yes
+  roles:
+    - { role: /home/centos/configuration-manager/src/opsstack/roles/k8s_master_worker}

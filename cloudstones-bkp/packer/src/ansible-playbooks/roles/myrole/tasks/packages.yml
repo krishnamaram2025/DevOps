@@ -1,0 +1,16 @@
+---
+- name: install core packages
+  yum: pkg={{ item }} state=latest update_cache=yes
+  with_items:
+    - lsof
+    - wget
+    - curl
+    - unzip
+    - git
+    - yum-utils
+    - cloud-init
+
+- name: cleanup/remove  unnecessary  packages
+  yum: pkg={{ item }} state=absent
+  with_items:
+    - lsof

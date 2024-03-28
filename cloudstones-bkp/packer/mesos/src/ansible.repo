@@ -1,0 +1,5 @@
+[Ansible]
+name = ansible
+baseurl = https://releases.ansible.com/ansible/rpm/release/epel-7-x86_64/
+enabled = 1
+gpgcheck = 0

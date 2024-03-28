@@ -1,0 +1,5 @@
+- hosts: dbserver
+  roles:
+    - role: krishna.mysql
+    - role: krishna-mysql
+      become: yes
