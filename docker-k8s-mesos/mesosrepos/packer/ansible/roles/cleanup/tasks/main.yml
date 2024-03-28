@@ -1,0 +1,5 @@
+---
+- name: cleanup/remove  unnecessary  packages
+  yum: pkg={{ item }} state=absent
+  with_items:
+    - wget

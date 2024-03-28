@@ -1,0 +1,8 @@
+---
+  - name: install http server
+    yum: name=httpd state=latest
+
+  - name: restart http server
+    service:
+        name: httpd
+        state: started

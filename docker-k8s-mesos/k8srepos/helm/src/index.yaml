@@ -1,0 +1,12 @@
+apiVersion: v1
+entries:
+  flask-mysql-chart:
+  - apiVersion: v1
+    created: "2021-04-08T09:19:57.792512868Z"
+    description: webapp chart for Kubernetes
+    digest: ca646bed33acada618029162ab23ee0d7d682447cef210286ea337e31e50c268
+    name: flask-mysql-chart
+    urls:
+    - https://cloudstones.github.io/helm-charts/flask-mysql-chart-0.1.0.tgz
+    version: 0.1.0
+generated: "2021-04-08T09:19:57.791893616Z"

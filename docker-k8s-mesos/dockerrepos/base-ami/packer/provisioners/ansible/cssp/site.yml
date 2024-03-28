@@ -1,0 +1,10 @@
+---
+- name: Common core packages main playbook
+  hosts: all
+  become: yes
+  tasks:
+    - import_role:
+        name: os_update
+    - import_role:
+        name: cleanup
+      

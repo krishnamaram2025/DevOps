@@ -1,0 +1,4 @@
+---
+image_index: "csporg/haproxy"
+image_version: "{{ image_tag }}"
+image_name: "{{  image_index }}:{{ image_version }}"

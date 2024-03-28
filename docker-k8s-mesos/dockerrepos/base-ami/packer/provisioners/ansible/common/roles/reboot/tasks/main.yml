@@ -1,0 +1,11 @@
+---
+- name: Reboot the instance
+  shell: sleep 2 && shutdown -r now
+  become: yes
+  async: 10
+  poll: 0
+
+- name: wait for instance to come back
+  wait_for_connection:
+    delay: "{{ reboot_delay }}" 
+    timeout: "{{ reboot_timeout }}"

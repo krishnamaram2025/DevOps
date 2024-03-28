@@ -1,0 +1,13 @@
+---
+- name: include metadata
+  include_vars: "/etc/csp/boot_config/metadata.json"
+  tags: installation
+
+- name: register vm_role from metadata
+  set_fact: vm_role={{ meta.vm_role }}
+
+- include: lbserver.yml
+  when: vm_role== "lbserver"
+
+- include: appserver.yml
+  when: vm_role== "appserver"

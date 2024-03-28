@@ -1,0 +1,6 @@
+---
+# wait these many seconds before polling instance
+reboot_delay: 500
+
+#maximum seconds to wait for instance response
+reboot_timeout: 1000

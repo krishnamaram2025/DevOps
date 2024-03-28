@@ -1,0 +1,24 @@
+---
+
+- name: Cloud Init | Preserve Hostname
+  lineinfile:
+    path: /etc/cloud/cloud.cfg
+    line: "preserve_hostname: true"
+    insertbefore: BOF
+    state: present
+    backup: yes
+
+- name: Cloud Init | Delete default SSH keys if any
+  replace:
+    path: /etc/cloud/cloud.cfg
+    regexp: '(^\s*ssh_deletekeys:).*$'
+    replace: '\1 true'
+    backup: yes
+
+- name: Cloud Init | Change default user
+  replace:
+    path: /etc/cloud/cloud.cfg
+    after: 'default_user:'
+    regexp: '(^\s*name:).*$'
+    replace: '\1 {{ cloud_user }}'
+    backup: yes

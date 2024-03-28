@@ -1,0 +1,116 @@
+[centos@ip-10-0-1-87 ~]$ cat baseami.xml
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>20</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>AWS_DEFAULT_REGION</name>
+          <defaultValue>us-east-1</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@4.8.2">
+    <configVersion>2</configVersion>
+    <userRemoteConfigs>
+      <hudson.plugins.git.UserRemoteConfig>
+        <url>https://github.com/containerrepos/base-ami-builder.git</url>
+        <credentialsId>cssp-user-id</credentialsId>
+      </hudson.plugins.git.UserRemoteConfig>
+    </userRemoteConfigs>
+    <branches>
+      <hudson.plugins.git.BranchSpec>
+        <name>*/main</name>
+      </hudson.plugins.git.BranchSpec>
+    </branches>
+    <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
+    <submoduleCfg class="empty-list"/>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.LocalBranch>
+        <localBranch>main</localBranch>
+      </hudson.plugins.git.extensions.impl.LocalBranch>
+    </extensions>
+  </scm>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <hudson.tasks.Shell>
+      <command>#!/bin/bash
+echo -e &apos;\n&apos; &gt;&gt; Dockerfile
+echo &apos;ARG GIT_LOCAL_BRANCH&apos; &gt;&gt; Dockerfile
+echo &apos;ENV GIT_LOCAL_BRANCH=${GIT_LOCAL_BRANCH}&apos; &gt;&gt; Dockerfile
+echo &apos;ARG BUILD_NUMBER&apos; &gt;&gt; Dockerfile
+echo &apos;ENV BUILD_NUMBER=${BUILD_NUMBER}&apos; &gt;&gt; Dockerfile
+exit 0</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+    <com.cloudbees.dockerpublish.DockerBuilder plugin="docker-build-publish@1.3.3">
+      <server plugin="docker-commons@1.17"/>
+      <registry plugin="docker-commons@1.17">
+        <url>http://3.238.164.73:8081</url>
+        <credentialsId>jfrogid</credentialsId>
+      </registry>
+      <repoName>mydockerrepo/packers</repoName>
+      <noCache>false</noCache>
+      <forcePull>true</forcePull>
+      <skipBuild>false</skipBuild>
+      <skipDecorate>false</skipDecorate>
+      <repoTag>${GIT_LOCAL_BRANCH}_${BUILD_NUMBER}</repoTag>
+      <skipPush>false</skipPush>
+      <createFingerprint>true</createFingerprint>
+      <skipTagLatest>false</skipTagLatest>
+      <buildAdditionalArgs></buildAdditionalArgs>
+      <forceTag>false</forceTag>
+    </com.cloudbees.dockerpublish.DockerBuilder>
+    <hudson.tasks.Shell>
+      <command>docker run -d -e AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID} -e AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY} -e AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION} 3.238.164.73:8081/mydockerrepo/packers:${GIT_LOCAL_BRANCH}_${BUILD_NUMBER}</command>
+      <configuredLocalRules/>
+    </hudson.tasks.Shell>
+  </builders>
+  <publishers>
+    <hudson.tasks.Mailer plugin="mailer@1.34">
+      <recipients>krishnamaram24@gmail.com</recipients>
+      <dontNotifyEveryUnstableBuild>false</dontNotifyEveryUnstableBuild>
+      <sendToIndividuals>false</sendToIndividuals>
+    </hudson.tasks.Mailer>
+  </publishers>
+  <buildWrappers>
+    <org.jenkinsci.plugins.credentialsbinding.impl.SecretBuildWrapper plugin="credentials-binding@1.27">
+      <bindings>
+        <org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+          <credentialsId>awsaccesskeyid</credentialsId>
+          <variable>AWS_ACCESS_KEY_ID</variable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+        <org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+          <credentialsId>AWSsecretkey</credentialsId>
+          <variable>AWS_SECRET_ACCESS_KEY</variable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+        <org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+          <credentialsId>secret_git_id</credentialsId>
+          <variable>gitapitoken</variable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+        <org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+          <credentialsId>jfrogsecretid</credentialsId>
+          <variable>dockerapikeys</variable>
+        </org.jenkinsci.plugins.credentialsbinding.impl.StringBinding>
+      </bindings>
+    </org.jenkinsci.plugins.credentialsbinding.impl.SecretBuildWrapper>
+  </buildWrappers>
+</project>[centos@ip-10-0-1-87 ~]$

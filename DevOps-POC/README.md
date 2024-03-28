@@ -1,42 +1,42 @@
-# DevOps
-This project is intended to touch and feel DevOps methodology.
+# DevOps    =  Dev  +  Ops   =   Development + Operations
+This project is implemented to touch and feel the DevOps Pipeline
 
-# Technologies used
-Developement: HTML,Python, DJango, SQL, SQLITE, Gunicorn, VS code, Draw.io
+# Pre-Requisites
+IAM User Access Keys
 
-Operations: AWS(VPC, EC2, EBS)
+Region
 
-DevOps: GitHub, Git, Packer, Terraform, Ansible
+KeyPair
 
-To be implemented: Jenkins, Artifactory
+AMI ID
 
-# Development Team: Run DJango App locally 
-Step 1: Download webapp.zip and Extract to local machine folder Downloads and enter into webapp folder
-```
-cd webapp
-```
-Step 2: Run migration to create table in SQLite database
-```
-python manage.py makemigrations
-```
-```
-python manage.py migrate
-```
-Step 3: Run DJangi inbuild developement server
-```
-python manage.py runserver
-```
-Step 4: Test the app from the browser
-```
-http://127.0.0.1:8000
-```
+# Phase 0: launch ec2 instance and named as "Sandbox"
 
-# Architecture Diagrams
-![image](https://user-images.githubusercontent.com/112494492/235676293-0fe26b47-b197-4a27-aec0-9703cab619ad.png)
-![image](https://user-images.githubusercontent.com/112494492/235676429-ab61a488-2f7a-4829-8b14-c3817aaae048.png)
+Step 1: Launch EC2 instance from the AWS Console and logging into EC2 instance and install git tool
 
-# Operations Team: Provision Infrastructure and Application deployment using Traditional approach
-https://github.com/devops2023q2/DevOps/blob/master/ManualSetUp.md
+$sudo yum install git -y
 
-# DevOps Team: Provision Infrastructure and Application deployment using DevOps approach
-https://github.com/devops2023q2/DevOps/blob/master/AutomateSetUp.md
+Step 2: clone deployer git repo
+
+$sudo git clone https://github.com/krishnamaram2025/DevOps.git
+
+Step 3: Install all the necessary packages  
+
+$python ~/deployer/src/sandbox/sandbox.py
+
+
+# Phase 1: Build custom AMI using "Packer"
+
+$python ./deployer/src/infrastructure/packer/image_builder.py
+
+
+# Phase 2: Provision infrastructure using "Terraform"
+
+$python ./deployer/src/infrastructure/terraform/infrastructure_manager.py
+
+
+# Phase 3: Configure Softwares using "Ansible" 
+
+$python ./deployer/src/infrastructure/ansible/ssh_keys.py
+
+$python ./deployer/src/infrastrcuture/ansible/play_books.py

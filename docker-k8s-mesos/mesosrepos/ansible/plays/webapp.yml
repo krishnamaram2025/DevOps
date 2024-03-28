@@ -1,0 +1,15 @@
+---
+- name: This play is for to install and configure haproxy and flask services
+  hosts: localhost
+  gather_facts: no
+  vars_files: 
+   - /etc/csp/boot_config/metadata.json
+  vars:
+  # image_path: "https://hub.docker.com/orgs/"
+   image_tag: "master_1"
+  pre_tasks:
+   - name: vars from metadata
+     set_fact: vm_role={{ meta.vm_role }}  
+  roles:
+   - {  role: /home/centos/ansible/roles/appservices, when: (vm_role == 'lbserver' or vm_role == 'appserver') }
+   

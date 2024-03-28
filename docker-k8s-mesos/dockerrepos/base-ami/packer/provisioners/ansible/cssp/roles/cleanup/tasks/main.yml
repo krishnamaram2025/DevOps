@@ -1,0 +1,9 @@
+---
+- name: Remove unnecessary packages
+  # autoremove facility not in 'yum' module hence using 'command'
+  command: yum autoremove -y
+
+- name: Zero out remaining disk space
+  shell: dd if=/dev/zero of=/EMPTY bs=1M; rm -f /EMPTY; sync
+  ignore_errors: yes
+

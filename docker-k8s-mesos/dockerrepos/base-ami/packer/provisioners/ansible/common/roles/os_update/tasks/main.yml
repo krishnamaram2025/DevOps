@@ -1,0 +1,11 @@
+---
+- name: Upgrade all packages except kernel related
+  yum:
+    name: '*'
+    state: latest
+    exclude: 'kernel'
+    update_cache: yes
+
+- name: Reboot the instance
+  import_role: 
+      name: reboot
