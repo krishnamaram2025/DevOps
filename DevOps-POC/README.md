@@ -18,7 +18,7 @@ $sudo yum install git -y
 
 Step 2: clone deployer git repo
 
-$sudo git clone https://github.com/krishnamaram2025/DevOps.git
+$sudo git clone https://github.com/krishnamaram2025/DevOps.git && cd DevOps-POC
 
 Step 3: Install all the necessary packages  
 
